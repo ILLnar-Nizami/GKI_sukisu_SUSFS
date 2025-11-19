@@ -1,4 +1,4 @@
-name: 编译内核a14-6-1
+name: Build kernel a14-6-1
 
 permissions:
   contents: write  # Allow writing to repository contents (for pushing tags)
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       kernelsu_variant:
-        description: "选择 KernelSU"
+        description: "Select KernelSU variant"
         required: true
         type: choice
         options:
@@ -18,38 +18,38 @@ on:
           - SukiSU
         default: SukiSU
       kernelsu_branch:
-        description: "选择 ksu 分支"
+        description: "Select KernelSU branch"
         required: true
         type: choice
         options:
-          - Stable(标准)
-          - Dev(开发)
-          - Other(其他/指定)
-        default: Dev(开发)
+          - Stable
+          - Dev
+          - Other
+        default: Dev
       version:
-        description: '自定义版本名(如6.1.93后面的字符/留空则使用默认版本号)'
+        description: 'Custom version suffix (e.g. text after 6.1.93; leave blank to use default)'
         required: false
         type: string
       use_zram:
-        description: '是否开启增加更多ZRAM算法?'
+        description: 'Enable additional ZRAM algorithms?'
         required: true
         type: boolean
         default: true
       use_kpm:
-        description: '是否开启KPM功能?'
+        description: 'Enable KPM feature?'
         required: true
         type: boolean
         default: true
       get_manager:
-        description: '是否同时获取最新KSU管理器?（实验性功能，报错请关闭）'
+        description: 'Also download the latest KSU manager? (Experimental—turn off if it errors)'
         required: true
         type: boolean
         default: true
       BBG:
-        description: '是否启用内核层面阻止对关键分区/设备节点的非法写入(LSM)?'
+        description: 'Enable kernel-level LSM protection for critical partitions/dev nodes?'
         required: true
         type: boolean
-        default: false
+        default: true
 jobs:
 
   build-kernel-a14-6-1:

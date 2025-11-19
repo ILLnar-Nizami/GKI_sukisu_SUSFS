@@ -23,17 +23,22 @@ on:
         type: string
         default: ""
       use_zram:
-        description: '是否开启增加更多ZRAM算法?'
+        description: 'Enable additional ZRAM algorithms?'
         required: true
         type: boolean
         default: true
       use_kpm:
-        description: '是否开启KPM功能?'
+        description: 'Enable KPM feature?'
         required: true
         type: boolean
         default: true
+      supp_op:
+        description: 'Enable supplemental optimizations?'
+        required: false
+        type: boolean
+        default: false
       BBG:
-        description: '是否启用内核层面阻止对关键分区/设备节点的非法写入(LSM)？'
+        description: 'Enable kernel-level LSM protection for critical partitions/device nodes?'
         required: true
         type: boolean
         default: true
