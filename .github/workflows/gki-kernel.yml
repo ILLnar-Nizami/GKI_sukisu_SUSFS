@@ -28,9 +28,10 @@ on:
       kernelsu_branch:
         required: true
         type: string
-      # kernelsu_branch_other:
-      #   required: false
-      #   type: string
+      kernelsu_branch_other:
+        required: false
+        type: string
+        default: ""
       revision:
         required: false
         type: string
@@ -221,6 +222,7 @@ jobs:
         run: |
           branch_input="${{ inputs.kernelsu_branch }}"
           variant_input="${{ inputs.kernelsu_variant }}"
+          custom_branch="${{ inputs.kernelsu_branch_other }}"
           
           case "$branch_input" in
             "Stable")
@@ -237,8 +239,16 @@ jobs:
                   ;;
               esac
               ;;
+            "Other")
+              if [ -n "$custom_branch" ]; then
+                echo "BRANCH=-s $custom_branch" >> $GITHUB_ENV
+              else
+                echo "Error: Custom branch selected but kernelsu_branch_other is empty" >&2
+                exit 1
+              fi
+              ;;
             *)
-              echo "Error: Custom branch was required but not provided" >&2
+              echo "Error: Unknown kernelsu_branch value '$branch_input'" >&2
               exit 1
               ;;
           esac

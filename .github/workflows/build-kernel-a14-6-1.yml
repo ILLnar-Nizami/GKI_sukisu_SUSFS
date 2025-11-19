@@ -26,6 +26,10 @@ on:
           - Dev
           - Other
         default: Dev
+      kernelsu_branch_other:
+        description: 'Branch name to use when selecting "Other"'
+        required: false
+        type: string
       version:
         description: 'Custom version suffix (e.g. text after 6.1.93; leave blank to use default)'
         required: false
@@ -59,6 +63,7 @@ jobs:
       make_release: false
       kernelsu_variant: ${{ inputs.kernelsu_variant }}
       kernelsu_branch: ${{ inputs.kernelsu_branch }}
+      kernelsu_branch_other: ${{ inputs.kernelsu_branch_other }}
       version: ${{ inputs.version }}
       use_zram: ${{ inputs.use_zram }}
       use_kpm: ${{ inputs.use_kpm }}
