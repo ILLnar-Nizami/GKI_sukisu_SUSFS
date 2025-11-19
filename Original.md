@@ -94,6 +94,6 @@ This helps me alot! <3
 [sidex15](https://github.com/sidex15) - Created module!  
 [backslashxx](https://github.com/backslashxx) - Helped with patches!  
 [Teemo](https://github.com/liqideqq) - Helped with patches!  
-[幕落](https://github.com/MuLuo688) - Donation!
+[Mu Luo](https://github.com/MuLuo688) - Donation!
 
 If you have contributed and are not here please remind me!
