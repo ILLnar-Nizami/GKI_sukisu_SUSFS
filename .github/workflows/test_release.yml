@@ -39,10 +39,10 @@ on:
         required: true
         type: choice
         options:
-        - Stable(标准)
-        - Dev(开发)
-        - Other(其他/指定)
-        default: Stable(标准)
+        - Stable
+        - Dev
+        - Other
+        default: Stable
       version:
         description: 'Custom version name (e.g., characters after 5.10.198 / leave blank to use default version number)'
         required: false
@@ -58,7 +58,7 @@ on:
         type: boolean
         default: true
       BBG:
-        description: "是否启用内核层面阻止对关键分区/设备节点的非法写入(LSM)？"
+        description: "Enable kernel-level LSM guard for critical partitions/device nodes?"
         required: true
         type: boolean
         default: false
@@ -375,7 +375,7 @@ jobs:
         if: ${{ steps.release_check.outcome == 'success' }}
         run: |
           # Handle 'Other' branch selection
-          if [[ "${{ inputs.kernelsu_branch }}" == "Other(其他/指定)" ]]; then
+          if [[ "${{ inputs.kernelsu_branch }}" == "Other" ]]; then
             echo "Using custom branch selection"
             if [[ "${{ inputs.kernelsu_variant }}" == "Official" ]]; then
               KSU_BRANCH="main"
@@ -384,13 +384,13 @@ jobs:
             else
               KSU_BRANCH="main"  # Default for MKSU/SukiSU
             fi
-          elif [[ "${{ inputs.kernelsu_branch }}" == "Dev(开发)" || "${{ inputs.kernelsu_variant }}" == "MKSU" || "${{ inputs.kernelsu_variant }}" == "SukiSU" ]]; then
+          elif [[ "${{ inputs.kernelsu_branch }}" == "Dev" || "${{ inputs.kernelsu_variant }}" == "MKSU" || "${{ inputs.kernelsu_variant }}" == "SukiSU" ]]; then
             if [[ "${{ inputs.kernelsu_variant }}" == "Official" || "${{ inputs.kernelsu_variant }}" == "MKSU" || "${{ inputs.kernelsu_variant }}" == "SukiSU" ]]; then
               KSU_BRANCH="main"
             elif [[ "${{ inputs.kernelsu_variant }}" == "Next" ]]; then
               KSU_BRANCH="next"
             fi
-          elif [[ "${{ inputs.kernelsu_branch }}" == "Stable(标准)" && "${{ inputs.kernelsu_variant }}" != "MKSU" ]]; then
+          elif [[ "${{ inputs.kernelsu_branch }}" == "Stable" && "${{ inputs.kernelsu_variant }}" != "MKSU" ]]; then
             KSU_REPO_URL=""
             if [ "${{ inputs.kernelsu_variant }}" == "Official" ]; then
               KSU_REPO_URL="https://github.com/tiann/KernelSU.git"
@@ -432,7 +432,7 @@ jobs:
           
           KSU_REF=""
           KSU_URL=""
-          if [[ "${{ inputs.kernelsu_branch }}" == "Stable(标准)" && "${{ inputs.kernelsu_variant }}" != "MKSU" ]]; then
+          if [[ "${{ inputs.kernelsu_branch }}" == "Stable" && "${{ inputs.kernelsu_variant }}" != "MKSU" ]]; then
             TAG=$(git ls-remote --tags --sort=-v:refname "$KSU_REPO_URL" | grep -o 'refs/tags/.*' | cut -d'/' -f3 | head -n1)
             KSU_REF="${TAG:-UNKNOWN_TAG}"
             KSU_URL="https://github.com/$KSU_REPO_URL2/releases/tag/$KSU_REF"

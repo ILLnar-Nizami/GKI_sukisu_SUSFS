@@ -20,10 +20,10 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: 安装依赖
+      - name: Install dependencies
         run: sudo apt update && sudo apt upgrade -y && sudo apt install -y git curl jq
 
-      - name: 设定 KSU 环境变量
+      - name: Set KSU environment variables
         run: |
           if [ "${{ inputs.kernelsu_variant }}" == "Next" ]; then
             echo "This is the Next variant"
@@ -46,7 +46,7 @@ jobs:
             echo "Unknown variant"
           fi
 
-      - name: 添加 KernelSU
+      - name: Fetch KernelSU manager artifact
         run: |
           if [ "${{ inputs.kernelsu_variant }}" == "Next" ]; then
             echo "KernelSU Next..."
@@ -58,28 +58,28 @@ jobs:
             FILENAME="build-manager.yml"
           fi
 
-          # 获取最新成功构建的 ID
+          # Fetch latest successful workflow run ID
           BUILD_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/$REPO/actions/workflows/$FILENAME/runs?status=success" | \
           jq -r '.workflow_runs[0].id')
           echo 'BUILD_ID=$BUILD_ID'
-          # 获取该构建的 Artifacts
+          # Fetch artifacts for that run
           ARTIFACTS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/$REPO/actions/runs/$BUILD_ID/artifacts")
           echo 'ARTIFACTS=$ARTIFACTS'
-          # 获取 Manager 文件的下载链接
+          # Get the download URL for the Manager artifact
           if [ "${{ inputs.kernelsu_variant }}" == "Next" ]; then
             DOWNLOAD_URL=$(echo "$ARTIFACTS" | jq -r '.artifacts[] | select(.name | contains("Manager")) | .archive_download_url')
           elif [ "${{ inputs.kernelsu_variant }}" == "SukiSU" ]; then
             DOWNLOAD_URL=$(echo "$ARTIFACTS" | jq -r '.artifacts[] | select(.name | contains("Manager")) | .archive_download_url')
           fi
 
-          # 下载 Manager 文件
-          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o "${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip" "$DOWNLOAD_URL"
-          echo "Manager 文件已下载为：${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip"
+          # Download the Manager archive
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o "${{ inputs.kernelsu_variant }}-Manager(${{ env.KSU_VERSION }}).zip" "$DOWNLOAD_URL"
+          echo "Manager archive downloaded as: ${{ inputs.kernelsu_variant }}-Manager(${{ env.KSU_VERSION }}).zip"
           unzip *.zip
 
-      - name: 上传编译资产
+      - name: Upload manager artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.kernelsu_variant }}-Manager(${{ env.KSU_VERSION }})
